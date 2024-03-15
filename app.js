@@ -12,5 +12,5 @@ app.use("/", reportingsRoutes);
 
 const PORT = 3000;
 app.listen(PORT, () => {
-  console.log(`Serveur lancé sur le port ${PORT}`);
+  console.log(`Serveur a été lancé sur le port ${PORT}`);
 });
