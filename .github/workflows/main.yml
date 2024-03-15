@@ -27,30 +27,29 @@ jobs:
           npm ci
           npm test
 
-  build-docker-image:
+  # login:
+  #   runs-on: ubuntu-latest
+  #   needs: test
+  #   steps:
+  #     - name: Log in to the Container registry
+  #       uses: docker/login-action@v3
+  #       with:
+  #         registry: ghcr.io
+  #         username: yorim
+  #         password: ${{ secrets.ACCESS_TOKEN }}
+
+  build-and-push-docker-image:
     runs-on: ubuntu-latest
-    needs: test
-
+    needs: login
     steps:
-      - uses: actions/checkout@v3
-      - name: Build Docker image
-        run: |
-          docker build -t ghcr.io/${{ secrets.USERNAME }}/reporting-service:latest .
-        # Vérification : Vérifie si la construction de l'image a réussi
-      - name: Check Docker image
-        run: |
-          docker images
-        shell: bash
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/yorimn/eporting-service:latest
 
-  push-docket-image:
-    runs-on: ubuntu-latest
-    needs: build-docker-image
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Login to GitHub Container Registry
-        run: echo "${{ secrets.ACCESS_TOKEN }}" | docker login ghcr.io -u ${{ secrets.USERNAME }} --password-stdin
-      - name: Push Docker image to GitHub Container Registry
-        run: docker push ghcr.io/${{ secrets.USERNAME }}/reporting-service:latest
-
-      # Vous pouvez ajouter ici des étapes supplémentaires, comme le déploiement de l'image
+      # - name: Show Docker image name and path
+      #   run: docker images
