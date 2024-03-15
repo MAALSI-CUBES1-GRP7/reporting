@@ -35,9 +35,12 @@ jobs:
       - uses: actions/checkout@v3
       - name: Build Docker image
         run: |
-          IMAGE_NAME=ghcr.io/${{ secrets.USERNAME }}/reporting-service:latest
-          docker build -t $IMAGE_NAME .
-          echo "Docker image $IMAGE_NAME built successfully."
+          docker build -t ghcr.io/${{ secrets.USERNAME }}/reporting-service:latest .
+        # Vérification : Vérifie si la construction de l'image a réussi
+      - name: Check Docker image
+        run: |
+          docker images
+        shell: bash
 
   push-docket-image:
     runs-on: ubuntu-latest
@@ -48,7 +51,6 @@ jobs:
       - name: Login to GitHub Container Registry
         run: echo "${{ secrets.ACCESS_TOKEN }}" | docker login ghcr.io -u ${{ secrets.USERNAME }} --password-stdin
       - name: Push Docker image to GitHub Container Registry
-        run: |
-          IMAGE_NAME=ghcr.io/${{ secrets.USERNAME }}/reporting-service:latest
-          docker push $IMAGE_NAME
-          echo "Docker image $IMAGE_NAME pushed successfully."
+        run: docker push ghcr.io/${{ secrets.USERNAME }}/reporting-service:latest
+
+      # Vous pouvez ajouter ici des étapes supplémentaires, comme le déploiement de l'image
