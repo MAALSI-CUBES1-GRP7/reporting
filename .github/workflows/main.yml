@@ -36,9 +36,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t ghcr.io/${{ secrets.USERNAME }}/reporting-service:latest .
-        # Vérification : Vérifie si la construction de l'image a réussi
-        continue-on-error: true
-        run: docker images
+          docker images
         shell: bash
 
   push-docket-image:
