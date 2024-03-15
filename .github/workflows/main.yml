@@ -36,8 +36,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t ghcr.io/${{ secrets.USERNAME }}/reporting-service:latest .
-          docker images
-        shell: bash
+          docker images  # Vérification : Affiche les images Docker disponibles
 
   push-docket-image:
     runs-on: ubuntu-latest
@@ -49,5 +48,3 @@ jobs:
         run: echo "${{ secrets.ACCESS_TOKEN }}" | docker login ghcr.io -u ${{ secrets.USERNAME }} --password-stdin
       - name: Push Docker image to GitHub Container Registry
         run: docker push ghcr.io/${{ secrets.USERNAME }}/reporting-service:latest
-
-      # Vous pouvez ajouter ici des étapes supplémentaires, comme le déploiement de l'image
